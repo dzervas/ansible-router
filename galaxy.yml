@@ -1,0 +1,18 @@
+---
+
+namespace: dzervas
+name: router
+readme: README.md
+authors:
+  - Dimitris Zervas <dzervas@dzervas.gr>
+description: Pure Linux router with basic firewall, dhcp & DNS services with vlan support
+license_file: LICENSE
+tags:
+  - router
+  - firewall
+  - dnsmasq
+  - hostapd
+  - ferm
+repository: https://github.com/dzervas/ansible-router
+documentation: https://github.com/dzervas/ansible-router
+issues: https://github.com/dzervas/ansible-router/issues
