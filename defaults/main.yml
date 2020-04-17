@@ -1,0 +1,12 @@
+---
+
+wifi: []
+
+dns_tld: local
+dns_hostname: router
+dns_local_ttl: 300
+dns_dhcp_ttl: 30
+
+addresses: []
+
+subnets: []

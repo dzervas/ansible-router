@@ -1,0 +1,123 @@
+---
+
+# HostAPD stuff - Take care with the country code (mine was locked)
+# and modes. Also try to enable 802.11w that encrypts deauthentication frames
+# AKA mitigates deauthentication attacks
+#
+# This describes each wifi interface, not a network or wifi SSID!
+# You can define more than one SSIDs for each interface later on
+wifi:
+  #- name: usb # 8812AU
+    #iface: wlan1
+    #mode: g
+    #channel: 1
+    #country_code: GR
+    #i80211d: false
+    #i80211h: false
+    #i80211n: true
+    #i80211w: true
+    #i80211ac: true
+    #wmm_enabled: true
+    #require_ht: true
+    #ht_capab: "[HT40+][GF][SHORT-GI-20][SHORT-GI-40][RX-STBC1][MAX-AMSDU-7935][DSSS_CCK-40]"
+    #require_vht: true
+
+  - name: pci # AR5413/AR5414
+    iface: wlan0
+    mode: g
+    channel: 11
+    i80211w: true
+    require_ht: true
+    require_vht: true
+
+# Local DNS settings
+dns_tld: local # The TLD of your network(s). Hostname "hello" will be accessible as "hello.lan"
+dns_hostname: router # Hostname of the target device
+dns_local_ttl: 300 # TTL for local DNS records (NOT taken by DHCP leases)
+dns_dhcp_ttl: 30 # TTL for DHCP DNS records (hostnames) - keep it low in case some IP changes
+
+# WAN access confguration - currently tested behind a NAT
+wan_iface: eth0 # Interface that has internet access
+wan_cidr: 192.168.1.200/24 # IP of this device
+wan_gateway: 192.168.1.1
+wan_dns: # Upstream DNS servers - best to use Google or Cloudflare and not another internal DNS
+  - 1.1.1.1
+  - 1.0.0.1
+
+# DNS static records
+addresses: # Resolve all domains & subdomains to that IP
+  - domains: [ example.com ] # what.ever.example.com will still resolve to 10.0.0.80
+    ip: 10.0.0.80
+
+# Host records will be created for each interface and a "localized" IP will be
+# returned for the hostname
+host_records:
+  - hostname: server
+    ip_index: 80
+    # In iot0 server.local will resolve to 172.16.0.80
+    # But in lan0 will resolve to 10.0.0.80
+
+# Subnet configuration
+# My current setup has in mind different vlan per subnet - you can ommit that
+# Each subnet will have a separate network interface name (custom),
+# which is actually a bridge
+# Variables marked as (R) are required, (O) are optional and (R-<var>) are
+# required if <var> is set
+# Above unmarked variables are not required and the defaults are shown
+# NOTE: You can have more than one WiFi networks with the same WiFi card
+subnets:
+  # Minimal setup - this is a completely private network with no DHCP
+  # Good choice as a management network
+  - iface: man0 # (R) Subnet interface name
+    cidr: 192.168.0.1/24 # (R) Subnet CIDR
+    bridges: # (R) Physical interface of the subnet
+      - eth1
+      - eth2
+    allow_internet: false # (R) Allow internet access
+    dhcp: false # (R) Enable DHCP on that interface
+
+  # Maximum setup - this is a regular network with hidden WiFi & DHCP
+  # Good choice as an IoT connectivity network
+  # No reason your lamp needs access to your iPhone - Cloud FTW
+  - iface: iot0
+    cidr: 172.16.0.1/24
+    bridges:
+      - eth1
+      - eth2
+    vlan_id: 172 # (O) VLAN ID of the subnet
+    allow_internet: true
+    wifi_ssid: IoT # (O) SSID of the WiFi network
+    wifi_passphrase: OneReallyReallyLongPassword # (R-wifi_ssid) WiFi password
+    wifi_iface: wlan0 # (R-wifi_ssid) Physical interface of the WiFi card
+    wifi_hidden: true # (O) Is the WiFi SSID hidden?
+    dhcp: true
+    dhcp_range_start: 100 # (O) DHCP starting range - only last bits
+    dhcp_range_end: 200 # (O) DHCP ending range - this will result in a range of 172.16.0.100-172.16.16.200
+    dhcp_lease_time: 24h # (O) How much time are the DHCP leases kept
+    dhcp_static_lease_time: 30d # (O) How much time are the static DHCP leases kept
+    dhcp_static_leases: # (O) List of static DHCP leases
+      - mac: xx:xx:xx:xx:xx:xx # (R) MAC address of the device
+        ip_index: 10 # (R) IP last bits to give -> 172.16.0.10
+        hostname: raspberry # (O) Device hostname (ommit the TLD)
+        lease_time: 15d # (O) Lease time (overrites above)
+
+  - iface: lan0
+    cidr: 10.0.0.1/24
+    bridges:
+      - eth1
+      - eth2
+    vlan_id: 1337
+    allow_internet: true
+    wifi_ssid: "Beautiful WiFi"
+    wifi_passphrase: GreatPassword
+    wifi_hidden: false
+    wifi_iface: wlan0
+    dhcp: true
+    dhcp_range_start: 100
+    dhcp_range_end: 200
+    dhcp_lease_time: 6h
+    dhcp_static_lease_time: 30d
+    dhcp_static_leases:
+      - mac: yy:yy:yy:yy:yy:yy
+        ip_index: 80
+        hostname: server

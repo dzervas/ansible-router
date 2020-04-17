@@ -1,0 +1,18 @@
+---
+
+- name: Install hostapd required packages
+  apt:
+    state: latest
+    name:
+      - wireless-regdb
+      - crda
+      - hostapd
+  notify: restart hostapd
+
+- name: Copy hostapd configuration
+  template:
+    src: templates/hostapd.conf
+    dest: "/etc/hostapd/wifi_{{ item.name }}.conf"
+    backup: yes
+  with_list: "{{ wifi }}"
+  notify: restart hostapd

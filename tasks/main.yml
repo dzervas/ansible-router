@@ -1,0 +1,12 @@
+---
+
+- import_tasks: network.yml
+  tags: network
+- import_tasks: ferm.yml
+  tags: firewall
+- import_tasks: dnsmasq.yml
+  tags:
+    - dhcp
+    - dns
+- import_tasks: hostapd.yml
+  tags: wifi

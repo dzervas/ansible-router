@@ -1,0 +1,14 @@
+---
+
+- name: Install ferm required packages
+  apt:
+    state: latest
+    name: ferm
+  notify: restart ferm
+
+- name: Copy ferm configuration
+  template:
+    src: templates/ferm.conf
+    dest: /etc/ferm/ferm.conf
+    backup: yes
+  notify: restart ferm

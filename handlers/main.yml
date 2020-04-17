@@ -1,0 +1,21 @@
+---
+
+- name: restart networking
+  service:
+    name: networking
+    state: restarted
+
+- name: restart ferm
+  service:
+    name: ferm
+    state: restarted
+
+- name: restart hostapd
+  service:
+    name: hostapd
+    state: restarted
+
+- name: restart dnsmasq
+  service:
+    name: dnsmasq
+    state: restarted

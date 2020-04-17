@@ -1,0 +1,16 @@
+---
+
+- name: Configure network interfaces
+  template:
+    src: templates/network_interfaces.cfg
+    dest: /etc/network/interfaces
+    backup: yes
+  notify: restart networking
+
+- name: Configure subnet network interfaces
+  template:
+    src: templates/network_interfaces_subnet.cfg
+    dest: "/etc/network/interfaces.d/{{ item.iface }}.cfg"
+    backup: yes
+  with_list: "{{ subnets }}"
+  notify: restart networking
