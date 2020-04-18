@@ -9,7 +9,7 @@ galaxy_info:
     - name: Debian
       versions:
         - all
-    - name: Antix
+    - name: Ubuntu
       versions:
         - all
   galaxy_tags:
