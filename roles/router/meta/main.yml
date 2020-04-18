@@ -2,3 +2,8 @@
 
 galaxy_info:
   role_name: router
+  author: Dimitris Zervas <dzervas@dzervas.gr>
+  description: Pure Linux router with basic firewall, dhcp & DNS services with vlan support
+  license: MIT
+  platforms: Linux
+  min_ansible_version: 2.9

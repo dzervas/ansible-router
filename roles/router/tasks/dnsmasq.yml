@@ -2,7 +2,7 @@
 
 - name: Install dnsmasq required packages
   apt:
-    state: latest
+    state: present
     name:
       - dnsmasq-base
       - dnsmasq

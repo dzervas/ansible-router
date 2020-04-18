@@ -2,7 +2,7 @@
 
 - name: Install hostapd required packages
   apt:
-    state: latest
+    state: present
     name:
       - wireless-regdb
       - crda

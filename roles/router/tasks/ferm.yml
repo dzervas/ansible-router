@@ -2,7 +2,7 @@
 
 - name: Install ferm required packages
   apt:
-    state: latest
+    state: present
     name: ferm
   notify: restart ferm
 
