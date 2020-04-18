@@ -22,4 +22,3 @@ jobs:
         with:
           api_key: '${{ secrets.GALAXY_API_KEY }}'
           galaxy_version: '${{ env.RELEASE_VERSION }}'
-          collection_dir: .

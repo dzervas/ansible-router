@@ -1,3 +1,5 @@
+![publish](https://github.com/dzervas/ansible-router/workflows/publish/badge.svg)
+
 # Linux router ansible role
 
 This is a linux router ansible role. I'm testing it on my Alix 2 by PCEngines
